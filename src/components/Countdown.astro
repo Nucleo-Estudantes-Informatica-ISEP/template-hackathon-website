@@ -1,0 +1,60 @@
+---
+interface Props {
+  targetISO: string;
+}
+
+const { targetISO } = Astro.props;
+---
+
+<section class="bg-nei-blue-dark py-16 text-white">
+  <div class="mx-auto max-w-6xl px-4 text-center md:px-6">
+    <h2 class="text-3xl font-extrabold md:text-4xl">Countdown</h2>
+    <p class="mt-2 text-white/80">Tempo restante até ao início</p>
+
+    <div class="mx-auto mt-8 grid max-w-2xl grid-cols-2 gap-4 md:grid-cols-4">
+      <div class="rounded-xl bg-white/10 p-4">
+        <p id="days" class="text-3xl font-extrabold">00</p>
+        <p class="text-xs uppercase tracking-widest text-white/70">Dias</p>
+      </div>
+      <div class="rounded-xl bg-white/10 p-4">
+        <p id="hours" class="text-3xl font-extrabold">00</p>
+        <p class="text-xs uppercase tracking-widest text-white/70">Horas</p>
+      </div>
+      <div class="rounded-xl bg-white/10 p-4">
+        <p id="minutes" class="text-3xl font-extrabold">00</p>
+        <p class="text-xs uppercase tracking-widest text-white/70">Min</p>
+      </div>
+      <div class="rounded-xl bg-white/10 p-4">
+        <p id="seconds" class="text-3xl font-extrabold">00</p>
+        <p class="text-xs uppercase tracking-widest text-white/70">Seg</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script define:vars={{ targetISO }}>
+  const target = new Date(targetISO).getTime();
+
+  const write = (id, value) => {
+    const element = document.getElementById(id);
+    if (element) element.textContent = String(value).padStart(2, '0');
+  };
+
+  const tick = () => {
+    const now = Date.now();
+    const diff = Math.max(0, target - now);
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((diff / (1000 * 60)) % 60);
+    const seconds = Math.floor((diff / 1000) % 60);
+
+    write('days', days);
+    write('hours', hours);
+    write('minutes', minutes);
+    write('seconds', seconds);
+  };
+
+  tick();
+  setInterval(tick, 1000);
+</script>
