@@ -1,0 +1,25 @@
+---
+interface Award {
+  title: string;
+  description: string;
+}
+
+interface Props {
+  items: Award[];
+}
+
+const { items } = Astro.props;
+---
+
+<section id="awards" class="mx-auto max-w-6xl px-4 py-16 md:px-6">
+  <h2 class="section-title text-center">Prémios</h2>
+  <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {items.map((item) => (
+      <article class="card p-6">
+        <p class="inline-flex rounded-full bg-nei-blue-soft px-3 py-1 text-xs font-semibold uppercase text-nei-blue-dark">Prémio</p>
+        <h3 class="mt-4 text-lg font-bold text-nei-blue-dark">{item.title}</h3>
+        <p class="mt-2 text-sm text-nei-text/90">{item.description}</p>
+      </article>
+    ))}
+  </div>
+</section>
