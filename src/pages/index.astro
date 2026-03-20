@@ -1,11 +1,40 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import InfoSection from '../components/InfoSection.astro';
+import Countdown from '../components/Countdown.astro';
+import Schedule from '../components/Schedule.astro';
+import Jury from '../components/Jury.astro';
+import Awards from '../components/Awards.astro';
+import Sponsors from '../components/Sponsors.astro';
+import Acknowledgments from '../components/Acknowledgments.astro';
+import JoinSection from '../components/JoinSection.astro';
+import Footer from '../components/Footer.astro';
+import { site, eventInfo, schedule, jury, awards, sponsors, acknowledgments } from '../data/site';
 ---
 
-<Layout>
-	<Welcome />
+<Layout title={site.title} description={site.description}>
+  <Header />
+  <Hero
+    title={site.title}
+    subtitle="Estrutura pronta para eventos, com seções reutilizáveis e design azul claro + branco inspirado no NEI."
+    ctaLabel={site.ctaLabel}
+    ctaHref={site.ctaHref}
+    regulationHref={site.regulationHref}
+    registrationEndsISO={site.registrationEndsISO}
+  />
+  <InfoSection items={eventInfo} />
+  <Countdown targetISO="2026-03-27T20:00:00" />
+  <Schedule entries={schedule} />
+  <Jury members={jury} />
+  <Awards items={awards} />
+  <Sponsors items={sponsors} />
+  <Acknowledgments items={acknowledgments} />
+  <JoinSection
+    registrationEndsISO={site.registrationEndsISO}
+    submissionDayISO={site.submissionDayISO}
+    regulationHref={site.regulationHref}
+  />
+  <Footer />
 </Layout>
