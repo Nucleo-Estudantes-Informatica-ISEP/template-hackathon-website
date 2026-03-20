@@ -18,7 +18,7 @@ const { items } = Astro.props;
       {items.map((item) => (
         <a
           href={item.href}
-          class="rounded-xl border border-nei-blue/20 bg-nei-blue-soft/50 p-6 text-center text-sm font-semibold text-nei-blue-dark break-words transition hover:bg-nei-blue-soft"
+          class="rounded-xl border border-nei-blue/20 bg-nei-blue-soft/50 p-6 text-center text-sm font-semibold text-nei-blue-dark wrap-break-words transition hover:bg-nei-blue-soft"
         >
           {item.name}
         </a>
