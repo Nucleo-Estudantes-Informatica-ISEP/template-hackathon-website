@@ -1,0 +1,14 @@
+/*
+  Custom overrides live here.
+  This file is imported after `global.css`, so any rules you add will win
+  without touching the original styles.
+
+  Examples:
+  @theme {
+    --color-nei-blue: rgb(20 120 200);
+  }
+
+  .card {
+    border-radius: 1.5rem;
+  }
+*/
