@@ -1,0 +1,65 @@
+---
+---
+
+<header class="sticky top-0 z-40 border-b border-nei-blue/10 bg-white/95 backdrop-blur">
+  <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3 md:flex-nowrap md:px-6">
+    <a href="#top" class="text-base font-extrabold tracking-tight text-nei-blue-dark sm:text-lg">NEI-ISEP</a>
+
+    <div class="flex flex-wrap items-center justify-end gap-2 md:gap-3">
+      <div id="authGuestActions" class="flex flex-wrap items-center justify-end gap-2">
+        <a
+          href="/auth#signin"
+          class="whitespace-nowrap rounded-lg border border-nei-blue px-3 py-1 text-xs font-semibold text-nei-blue hover:bg-nei-blue/5"
+        >
+          Sign in
+        </a>
+        <a
+          href="/auth#signup"
+          class="whitespace-nowrap rounded-lg bg-nei-blue px-3 py-1 text-xs font-semibold text-white hover:bg-nei-blue-dark"
+        >
+          Sign up
+        </a>
+      </div>
+      <span id="authStatus" class="hidden max-w-40 truncate text-xs font-medium text-nei-text/80 sm:inline"></span>
+      <button
+        id="authSignOut"
+        type="button"
+        class="hidden whitespace-nowrap rounded-lg border border-nei-blue px-3 py-1 text-xs font-semibold text-nei-blue hover:bg-nei-blue/5"
+      >
+        Sair
+      </button>
+    </div>
+  </div>
+</header>
+
+<script>
+  const authGuestActions = document.getElementById('authGuestActions');
+  const authStatus = document.getElementById('authStatus');
+  const authSignOut = document.getElementById('authSignOut');
+  const currentUserRaw = localStorage.getItem('neiAuthCurrent');
+
+  if (authGuestActions instanceof HTMLDivElement && currentUserRaw) {
+    authGuestActions.classList.add('hidden');
+  }
+
+  if (authStatus instanceof HTMLSpanElement) {
+    if (currentUserRaw) {
+      try {
+        const currentUser = JSON.parse(currentUserRaw);
+        authStatus.textContent = `Olá, ${currentUser.name ?? currentUser.email ?? 'utilizador'}`;
+      } catch {
+        authStatus.textContent = 'Sessão ativa';
+      }
+    } else {
+      authStatus.textContent = '';
+    }
+  }
+
+  if (authSignOut instanceof HTMLButtonElement && currentUserRaw) {
+    authSignOut.classList.remove('hidden');
+    authSignOut.addEventListener('click', () => {
+      localStorage.removeItem('neiAuthCurrent');
+      window.location.reload();
+    });
+  }
+</script>
