@@ -1,0 +1,27 @@
+---
+interface JuryMember {
+  name: string;
+  role: string;
+}
+
+interface Props {
+  members: JuryMember[];
+}
+
+const { members } = Astro.props;
+---
+
+<section id="jury" class="bg-nei-blue-soft py-16">
+  <div class="mx-auto max-w-6xl px-4 md:px-6">
+    <h2 class="section-title text-center">Júri</h2>
+    <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {members.map((member) => (
+        <article class="card p-6 text-center">
+          <div class="mx-auto h-16 w-16 rounded-full bg-nei-blue/10"></div>
+          <h3 class="mt-4 text-lg font-bold text-nei-blue-dark">{member.name}</h3>
+          <p class="mt-1 text-sm text-nei-text/80">{member.role}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
