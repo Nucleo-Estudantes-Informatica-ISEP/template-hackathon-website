@@ -1,0 +1,62 @@
+---
+interface Props {
+  title: string;
+  subtitle: string;
+  ctaLabel: string;
+  ctaHref: string;
+  regulationHref: string;
+  registrationEndsISO: string;
+}
+
+const { title, subtitle, ctaLabel, ctaHref, regulationHref, registrationEndsISO } = Astro.props;
+---
+
+<section id="top" class="relative overflow-hidden bg-nei-blue-soft">
+  <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(30,167,225,0.20),_transparent_50%)]"></div>
+  <div class="relative mx-auto max-w-6xl px-4 py-24 text-center md:px-6 md:py-32">
+    <p class="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-nei-blue">NEI-ISEP</p>
+    <h1 class="mx-auto max-w-3xl text-4xl font-extrabold leading-tight text-nei-blue-dark md:text-6xl">{title}</h1>
+    <p class="mx-auto mt-6 max-w-2xl text-base text-nei-text/90 md:text-lg">{subtitle}</p>
+    <a
+      href={ctaHref}
+      id="heroCta"
+      data-default-label={ctaLabel}
+      data-default-href={ctaHref}
+      data-regulation-href={regulationHref}
+      data-registration-ends-iso={registrationEndsISO}
+      class="mt-8 inline-flex rounded-xl bg-nei-blue px-6 py-3 text-sm font-semibold text-white transition hover:bg-nei-blue-dark"
+    >
+      {ctaLabel}
+    </a>
+  </div>
+</section>
+
+<script>
+  const heroCta = document.getElementById('heroCta');
+
+  if (heroCta instanceof HTMLAnchorElement) {
+    const registrationEndsISO = heroCta.dataset.registrationEndsIso;
+    const regulationHref = heroCta.dataset.regulationHref;
+    const defaultLabel = heroCta.dataset.defaultLabel ?? 'Inscreve-te';
+    const defaultHref = heroCta.dataset.defaultHref ?? '#join';
+
+    if (!registrationEndsISO || !regulationHref) {
+      heroCta.textContent = defaultLabel;
+      heroCta.href = defaultHref;
+    } else {
+      const now = new Date();
+      const registrationEnds = new Date(registrationEndsISO);
+      const registrationClosed = now >= registrationEnds;
+
+      if (registrationClosed) {
+        heroCta.textContent = 'Ver Regulamento';
+        heroCta.href = regulationHref;
+        heroCta.target = '_blank';
+        heroCta.rel = 'noopener noreferrer';
+      } else {
+        heroCta.textContent = defaultLabel;
+        heroCta.href = defaultHref;
+      }
+    }
+  }
+</script>
