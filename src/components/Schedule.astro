@@ -1,0 +1,28 @@
+---
+interface ScheduleDay {
+  day: string;
+  items: string[];
+}
+
+interface Props {
+  entries: ScheduleDay[];
+}
+
+const { entries } = Astro.props;
+---
+
+<section id="schedule" class="mx-auto max-w-6xl px-4 py-16 md:px-6">
+  <h2 class="section-title text-center">Cronograma</h2>
+  <div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    {entries.map((entry) => (
+      <article class="card p-6">
+        <h3 class="text-lg font-bold text-nei-blue-dark">{entry.day}</h3>
+        <ul class="mt-4 space-y-2">
+          {entry.items.map((line) => (
+            <li class="text-sm text-nei-text/90">• {line}</li>
+          ))}
+        </ul>
+      </article>
+    ))}
+  </div>
+</section>
