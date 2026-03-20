@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+/* In v4, @theme replaces the Tailwind config file.
+  It automatically detects variables starting with --color-* or --shadow-* */
+@theme {
+  --color-nei-blue: rgb(30 167 225);
+  --color-nei-blue-dark: rgb(13 79 139);
+  --color-nei-blue-soft: rgb(232 246 255);
+  --color-nei-text: rgb(21 50 74);
+
+  --shadow-card: 0 8px 30px rgb(13 79 139 / 0.1);
+
+  /* Setting the default font stack if you want 'sans' to be Inter */
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Standard CSS still works fine here! 
+*/
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* In v4, you can still use @apply for your custom utility classes 
+*/
+body {
+  @apply m-0 bg-white text-nei-text antialiased;
+}
+
+.section-title {
+  @apply text-3xl font-bold text-nei-blue-dark md:text-4xl;
+}
+
+.card {
+  @apply rounded-2xl border border-nei-blue/10 bg-white shadow-card;
+}
