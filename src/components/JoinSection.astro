@@ -1,0 +1,301 @@
+---
+interface Props {
+  registrationEndsISO: string;
+  submissionDayISO: string;
+  regulationHref: string;
+}
+
+const { registrationEndsISO, submissionDayISO, regulationHref } = Astro.props;
+---
+
+<section id="join" class="mx-auto mt-16 max-w-6xl px-4 md:px-6">
+  <div class="card p-6 md:p-8">
+    <div class="mb-6">
+      <h2 class="section-title">Participação</h2>
+      <p class="mt-2 text-sm text-nei-text/90 md:text-base">
+        A inscrição de equipas está disponível até à data limite. No último dia do evento, este espaço muda para submissão final.
+      </p>
+    </div>
+
+    <div
+      id="registrationBlock"
+      data-registration-ends-iso={registrationEndsISO}
+      data-submission-day-iso={submissionDayISO}
+      data-regulation-href={regulationHref}
+      class="space-y-6"
+    >
+      <form id="registrationForm" class="space-y-6" method="post">
+        <div class="space-y-2">
+          <label for="teamName" class="block text-sm font-semibold text-nei-blue-dark">Nome da Equipa</label>
+          <input
+            id="teamName"
+            name="teamName"
+            type="text"
+            required
+            class="w-full rounded-xl border border-nei-blue/25 px-4 py-3 text-nei-text outline-none transition focus:border-nei-blue focus:ring-2 focus:ring-nei-blue/20"
+            placeholder="Ex.: Byte Builders"
+          />
+        </div>
+
+        <fieldset class="space-y-3" id="membersFieldset">
+          <legend class="text-sm font-semibold text-nei-blue-dark">Membros da Equipa</legend>
+          <p class="text-xs text-nei-text/80">Total de membros: <span id="membersCount">1</span>/5</p>
+          <div id="membersContainer" class="space-y-3"></div>
+          <button
+            id="addMemberBtn"
+            type="button"
+            class="inline-flex w-full justify-center rounded-xl border border-nei-blue bg-white px-4 py-2 text-sm font-semibold text-nei-blue transition hover:bg-nei-blue/5 disabled:cursor-not-allowed disabled:opacity-50 sm:w-auto"
+          >
+            Adicionar outro membro
+          </button>
+        </fieldset>
+
+        <button
+          type="submit"
+          class="inline-flex w-full justify-center rounded-xl bg-nei-blue px-6 py-3 text-sm font-semibold text-white transition hover:bg-nei-blue-dark sm:w-auto"
+        >
+          Submeter inscrição
+        </button>
+      </form>
+
+      <form id="submissionForm" class="hidden space-y-5" method="post" enctype="multipart/form-data">
+        <p class="rounded-xl border border-nei-blue/20 bg-nei-blue-soft/40 p-3 text-sm text-nei-text">
+          Último dia do evento: envia agora a tua submissão final.
+        </p>
+
+        <div class="space-y-2">
+          <label for="submissionTeamName" class="block text-sm font-semibold text-nei-blue-dark">Nome da Equipa</label>
+          <input
+            id="submissionTeamName"
+            name="submissionTeamName"
+            type="text"
+            required
+            class="w-full rounded-xl border border-nei-blue/25 px-4 py-3 text-nei-text outline-none transition focus:border-nei-blue focus:ring-2 focus:ring-nei-blue/20"
+            placeholder="Ex.: Byte Builders"
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label for="projectLink" class="block text-sm font-semibold text-nei-blue-dark">Link do jogo/aplicação</label>
+          <input
+            id="projectLink"
+            name="projectLink"
+            type="url"
+            required
+            class="w-full rounded-xl border border-nei-blue/25 px-4 py-3 text-nei-text outline-none transition focus:border-nei-blue focus:ring-2 focus:ring-nei-blue/20"
+            placeholder="https://..."
+          />
+        </div>
+
+        <div class="space-y-2">
+          <label for="reportFile" class="block text-sm font-semibold text-nei-blue-dark">Relatório (PDF)</label>
+          <input
+            id="reportFile"
+            name="reportFile"
+            type="file"
+            required
+            accept=".pdf"
+            class="w-full rounded-xl border border-nei-blue/25 px-4 py-3 text-sm text-nei-text file:mr-3 file:rounded-lg file:border-0 file:bg-nei-blue file:px-3 file:py-2 file:text-white"
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="inline-flex w-full justify-center rounded-xl bg-nei-blue px-6 py-3 text-sm font-semibold text-white transition hover:bg-nei-blue-dark sm:w-auto"
+        >
+          Enviar submissão
+        </button>
+      </form>
+
+      <div id="closedBlock" class="hidden rounded-xl border border-nei-blue/20 bg-nei-blue-soft/40 p-4 text-sm text-nei-text">
+        As inscrições estão encerradas. Consulta o
+        <a href={regulationHref} target="_blank" rel="noopener noreferrer" class="font-semibold text-nei-blue hover:underline">
+          Regulamento
+        </a>
+        para mais informação.
+      </div>
+
+      <div class="rounded-xl border border-nei-blue/20 bg-nei-blue-soft/30 p-4 text-sm text-nei-text">
+        Dúvidas? Contacta a organização em
+        <a href="mailto:nei@example.com" class="font-semibold text-nei-blue hover:underline">nei@example.com</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  const registrationBlock = document.getElementById('registrationBlock');
+  const registrationForm = document.getElementById('registrationForm');
+  const submissionForm = document.getElementById('submissionForm');
+  const closedBlock = document.getElementById('closedBlock');
+
+  if (
+    registrationBlock instanceof HTMLDivElement
+    && registrationForm instanceof HTMLFormElement
+    && submissionForm instanceof HTMLFormElement
+    && closedBlock instanceof HTMLDivElement
+  ) {
+    const registrationEndsISO = registrationBlock.dataset.registrationEndsIso;
+    const submissionDayISO = registrationBlock.dataset.submissionDayIso;
+
+    const now = new Date();
+    const registrationEnds = registrationEndsISO ? new Date(registrationEndsISO) : null;
+    const submissionDay = submissionDayISO ? new Date(submissionDayISO) : null;
+
+    const registrationClosed = registrationEnds ? now >= registrationEnds : false;
+
+    let isSubmissionDay = false;
+    if (submissionDay) {
+      const submissionDayEnd = new Date(submissionDay);
+      submissionDayEnd.setDate(submissionDayEnd.getDate() + 1);
+      isSubmissionDay = now >= submissionDay && now < submissionDayEnd;
+    }
+
+    if (isSubmissionDay) {
+      registrationForm.classList.add('hidden');
+      closedBlock.classList.add('hidden');
+      submissionForm.classList.remove('hidden');
+    } else if (registrationClosed) {
+      registrationForm.classList.add('hidden');
+      submissionForm.classList.add('hidden');
+      closedBlock.classList.remove('hidden');
+    } else {
+      registrationForm.classList.remove('hidden');
+      submissionForm.classList.add('hidden');
+      closedBlock.classList.add('hidden');
+    }
+  }
+
+  const maxMembers = 5;
+  const minMembers = 1;
+
+  const membersContainer = document.getElementById('membersContainer');
+  const addMemberBtn = document.getElementById('addMemberBtn');
+  const membersCount = document.getElementById('membersCount');
+  const membersFieldset = document.getElementById('membersFieldset');
+
+  if (
+    membersContainer instanceof HTMLDivElement
+    && addMemberBtn instanceof HTMLButtonElement
+    && membersCount instanceof HTMLSpanElement
+    && membersFieldset instanceof HTMLFieldSetElement
+  ) {
+    const createMemberRow = (index: number) => {
+      const row = document.createElement('div');
+      row.className = 'member-row rounded-xl border border-nei-blue/20 p-3';
+      row.dataset.memberRow = 'true';
+
+      row.innerHTML = `
+        <div class="mb-3 flex items-center justify-between gap-3">
+          <label class="text-sm font-medium text-nei-blue-dark" for="member-name-${index}">Membro ${index}</label>
+          <button type="button" class="remove-member text-xs font-semibold text-nei-blue-dark hover:text-nei-blue">Remover</button>
+        </div>
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          <input
+            id="member-name-${index}"
+            name="members[${index}][name]"
+            type="text"
+            required
+            class="w-full rounded-lg border border-nei-blue/25 px-3 py-2 text-nei-text outline-none transition focus:border-nei-blue focus:ring-2 focus:ring-nei-blue/20"
+            placeholder="Nome"
+          />
+          <input
+            id="member-email-${index}"
+            name="members[${index}][email]"
+            type="email"
+            required
+            class="w-full rounded-lg border border-nei-blue/25 px-3 py-2 text-nei-text outline-none transition focus:border-nei-blue focus:ring-2 focus:ring-nei-blue/20"
+            placeholder="Email"
+          />
+          <input
+            id="member-phone-${index}"
+            name="members[${index}][phone]"
+            type="tel"
+            required
+            class="w-full rounded-lg border border-nei-blue/25 px-3 py-2 text-nei-text outline-none transition focus:border-nei-blue focus:ring-2 focus:ring-nei-blue/20"
+            placeholder="Telefone"
+          />
+        </div>
+      `;
+
+      return row;
+    };
+
+    const getRows = (): HTMLDivElement[] => {
+      return Array.from(membersContainer.querySelectorAll('[data-member-row="true"]')).filter(
+        (row): row is HTMLDivElement => row instanceof HTMLDivElement,
+      );
+    };
+
+    const updateUIState = () => {
+      const rows = getRows();
+      rows.forEach((row, i) => {
+        const memberIndex = i + 1;
+        const label = row.querySelector('label');
+        const removeBtn = row.querySelector('button.remove-member');
+        const nameInput = row.querySelector('input[id^="member-name-"]');
+        const emailInput = row.querySelector('input[id^="member-email-"]');
+        const phoneInput = row.querySelector('input[id^="member-phone-"]');
+
+        if (label instanceof HTMLLabelElement) {
+          label.textContent = `Membro ${memberIndex}`;
+          label.setAttribute('for', `member-name-${memberIndex}`);
+        }
+
+        if (nameInput instanceof HTMLInputElement) {
+          nameInput.id = `member-name-${memberIndex}`;
+          nameInput.name = `members[${memberIndex}][name]`;
+        }
+
+        if (emailInput instanceof HTMLInputElement) {
+          emailInput.id = `member-email-${memberIndex}`;
+          emailInput.name = `members[${memberIndex}][email]`;
+        }
+
+        if (phoneInput instanceof HTMLInputElement) {
+          phoneInput.id = `member-phone-${memberIndex}`;
+          phoneInput.name = `members[${memberIndex}][phone]`;
+        }
+
+        if (removeBtn instanceof HTMLButtonElement) {
+          removeBtn.disabled = rows.length <= minMembers;
+          removeBtn.classList.toggle('opacity-40', rows.length <= minMembers);
+          removeBtn.classList.toggle('cursor-not-allowed', rows.length <= minMembers);
+        }
+      });
+
+      membersCount.textContent = String(rows.length);
+      addMemberBtn.disabled = rows.length >= maxMembers;
+
+      if (rows.length < minMembers || rows.length > maxMembers) {
+        membersFieldset.setCustomValidity('A equipa deve ter entre 1 e 5 membros.');
+      } else {
+        membersFieldset.setCustomValidity('');
+      }
+    };
+
+    addMemberBtn.addEventListener('click', () => {
+      const rows = getRows();
+      if (rows.length >= maxMembers) return;
+
+      const nextIndex = rows.length + 1;
+      membersContainer.appendChild(createMemberRow(nextIndex));
+      updateUIState();
+    });
+
+    membersContainer.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLElement) || !target.classList.contains('remove-member')) return;
+
+      const rows = getRows();
+      if (rows.length <= minMembers) return;
+
+      const row = target.closest('[data-member-row="true"]');
+      row?.remove();
+      updateUIState();
+    });
+
+    membersContainer.appendChild(createMemberRow(1));
+    updateUIState();
+  }
+</script>
